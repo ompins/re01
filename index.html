@@ -153,70 +153,68 @@
             </audio>
         </div>
 
-
-
-    <!-- 图片展示区域 -->
-    <div class="image-section">
-        <h2 class="section-title">留影集</h2>
-        
-        <!-- 淡入淡出轮播区域 -->
-        <div class="slideshow-container">
-            <!-- 左切换按钮 -->
-            <button class="slideshow-btn slideshow-btn-prev" @click="prevImage">
-                <span class="arrow-icon left"></span>
-            </button>
+        <!-- 图片展示区域 -->
+        <div class="image-section">
+            <h2 class="section-title">留影集</h2>
             
-            <!-- 图片轮播 -->
-            <div 
-                v-for="(image, index) in images" 
-                :key="index"
-                class="slideshow-image"
-                :class="{ active: currentImageIndex === index }"
-            >
-                <img :src="image.src" :alt="image.alt" />
+            <!-- 淡入淡出轮播区域 -->
+            <div class="slideshow-container">
+                <!-- 左切换按钮 -->
+                <button class="slideshow-btn slideshow-btn-prev" @click="prevImage">
+                    <span class="arrow-icon left"></span>
+                </button>
+                
+                <!-- 图片轮播 -->
+                <div 
+                    v-for="(image, index) in images" 
+                    :key="index"
+                    class="slideshow-image"
+                    :class="{ active: currentImageIndex === index }"
+                >
+                    <img :src="image.src" :alt="image.alt" />
+                </div>
+                
+                <!-- 右切换按钮 -->
+                <button class="slideshow-btn slideshow-btn-next" @click="nextImage">
+                    <span class="arrow-icon right"></span>
+                </button>
             </div>
             
-            <!-- 右切换按钮 -->
-            <button class="slideshow-btn slideshow-btn-next" @click="nextImage">
-                <span class="arrow-icon right"></span>
-            </button>
-        </div>
-        
-        <!-- 轮播指示器 -->
-        <div class="slideshow-indicators">
-            <span 
-                v-for="(image, index) in images" 
-                :key="index"
-                class="indicator"
-                :class="{ active: currentImageIndex === index }"
-                @click="goToImage(index)"
-            ></span>
-        </div>
-        
-        <!-- 左右滑动图片列表 -->
-        <h3 class="gallery-title">所有照片</h3>
-        <div class="image-gallery" ref="imageGallery">
-            <div 
-                v-for="(image, index) in images" 
-                :key="index"
-                class="gallery-item"
-                @click="goToImage(index)"
-                :class="{ active: currentImageIndex === index }"
-            >
-                <img :src="image.src" :alt="image.alt" />
+            <!-- 轮播指示器 -->
+            <div class="slideshow-indicators">
+                <span 
+                    v-for="(image, index) in images" 
+                    :key="index"
+                    class="indicator"
+                    :class="{ active: currentImageIndex === index }"
+                    @click="goToImage(index)"
+                ></span>
             </div>
+            
+            <!-- 左右滑动图片列表 -->
+            <h3 class="gallery-title">所有照片</h3>
+            <div class="image-gallery" ref="imageGallery">
+                <div 
+                    v-for="(image, index) in images" 
+                    :key="index"
+                    class="gallery-item"
+                    @click="goToImage(index)"
+                    :class="{ active: currentImageIndex === index }"
+                >
+                    <img :src="image.src" :alt="image.alt" />
+                </div>
+            </div>
+            
+            <p class="image-caption">愿美好时刻永远陪伴着你</p>
         </div>
-        
-        <p class="image-caption">愿美好时刻永远陪伴着你</p>
-    </div>
 
-    <!-- 页脚祝福语 -->
-    <footer class="footer">
-        <p><a href="https://space.bilibili.com/693223116/dynamic?spm_id_from=333.1365.list.card_title.click" target="_blank" class="footer-link">㊗️ 新年快乐，美满幸福！</a></p>
-    </footer>
+        <!-- 页脚祝福语 -->
+        <footer class="footer">
+            <p><a href="https://space.bilibili.com/693223116/dynamic?spm_id_from=333.1365.list.card_title.click" target="_blank" class="footer-link">㊗️ 新年快乐，美满幸福！</a></p>
+        </footer>
+    </div> <!-- 关闭Vue应用根元素 -->
     
     <!-- Vue应用脚本 -->
     <script src="app.js"></script>
-</div> <!-- 关闭Vue应用根元素 -->
 </body>
 </html>
