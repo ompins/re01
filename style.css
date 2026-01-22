@@ -1,0 +1,1141 @@
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 开屏动画样式 */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #f7e7f7 0%, #e0f7fa 100%);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.8s ease-out;
+    overflow: hidden;
+}
+
+/* 樱花流星雨样式 */
+.sakura流星 {
+    position: absolute;
+    top: -20px;
+    color: #ffb6c1;
+    font-size: 20px;
+    opacity: 0.8;
+    animation: sakuraFall linear forwards;
+    z-index: 1;
+}
+
+/* 樱花流星雨动画 */
+@keyframes sakuraFall {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(150px, 100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* 开屏内容容器 */
+.splash-content {
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+/* 樱花图标 */
+.sakura-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: bounce 1s ease-in-out infinite alternate;
+}
+
+/* 进度条容器 */
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* 进度条 */
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 182, 193, 0.3), rgba(255, 105, 180, 0.3), rgba(255, 20, 147, 0.3));
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.3s ease;
+    background-size: 200% 100%;
+    animation: gradientShift 2s ease-in-out infinite;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* 进度条上的樱花 */
+.progress-sakura {
+    position: absolute;
+    right: -20px;
+    font-size: 16px;
+    animation: bounce 1s ease-in-out infinite alternate;
+}
+
+
+
+/* 加载文字 */
+.loading-text {
+    font-size: 18px;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+}
+
+/* 樱花图标弹跳动画 */
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+/* 进度条渐变动画 */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 移动端响应式优化 */
+@media (max-width: 768px) {
+    /* 调整樱花图标大小 */
+    .sakura-icon {
+        font-size: 56px;
+        margin-bottom: 15px;
+    }
+    
+    /* 调整进度条高度 */
+    .progress-container {
+        height: 16px;
+        margin-bottom: 12px;
+    }
+    
+    /* 调整加载文字大小 */
+    .loading-text {
+        font-size: 16px;
+    }
+    
+    /* 优化小屏幕上的动画效果 */
+    @keyframes bounce {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-8px); }
+    }
+}
+
+/* 小屏手机额外优化 */
+@media (max-width: 480px) {
+    /* 进一步缩小樱花图标 */
+    .sakura-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+    }
+    
+    /* 进一步缩小进度条 */
+    .progress-container {
+        height: 14px;
+        margin-bottom: 10px;
+    }
+    
+    /* 进一步缩小文字 */
+    .loading-text {
+        font-size: 14px;
+    }
+    
+    /* 优化超小屏幕上的动画效果 */
+    @keyframes bounce {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-6px); }
+    }
+}
+
+/* 屏幕抖动动画 - 用于手机端提示用户有下一页 */
+@keyframes shake {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-10px); }
+    50% { transform: translateY(10px); }
+    75% { transform: translateY(-10px); }
+}
+
+.shake-animation {
+    animation: shake 0.5s ease-in-out 4; /* 0.5秒动画，4次重复 */
+}
+
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* 背景容器 */
+#background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 背景样式 */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.8s ease-in-out;
+    opacity: 0;
+}
+
+.background.active {
+    opacity: 1;
+}
+
+/* 白天背景 */
+#day-background {
+    background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+    /* 冬季天空渐变 */
+}
+
+/* 黄昏背景 - 新添加 */
+#twilight-background {
+    background: linear-gradient(to bottom, #FFA500, #FF6347, #8B4513);
+    /* 黄昏渐变 */
+}
+
+/* 黑夜背景 */
+#night-background {
+    background: linear-gradient(to bottom, #0C0C1E, #1A1A2E);
+    /* 夜空渐变 */
+}
+
+/* 雪花容器 */
+#snow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* 雪花效果 */
+.snowflake {
+    position: absolute;
+    pointer-events: none;
+    animation: fall linear forwards;
+    color: white;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+/* 雪花下落动画 */
+@keyframes fall {
+    0% {
+        transform: translateY(-20px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+/* 移除不再使用的摇摆动画 */
+/* 雪花现在只使用fall动画确保正常下落 */
+
+/* Canvas烟花容器 */
+#fireworks-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* 烟花拖尾效果 */
+.firework-trail {
+    position: absolute;
+    pointer-events: none;
+}
+
+/* 烟花火箭效果 */
+.firework-rocket {
+    position: absolute;
+    background: linear-gradient(to top, transparent 0%, currentColor 100%);
+    box-shadow: 0 0 10px currentColor;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+/* 贺卡内容 */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 20px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 标题样式 */
+.title {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease-out;
+    /* 添加金色渐变效果 */
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+/* 简约切换按钮样式 */
+.toggle-btn-simple {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 15px;
+    background: linear-gradient(to right, #ffb74d, #ffa726); /* 白天状态：橙色渐变 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+/* 太阳光芒效果 */
+.toggle-btn-simple::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 5px;
+    width: 40px;
+    height: 50px;
+    background: radial-gradient(circle, rgba(255,235,59,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+.toggle-btn-simple.night::before {
+    opacity: 0;
+}
+
+/* 星星效果 */
+.toggle-btn-simple.night::after {
+    content: '✦✦✦';
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    font-size: 8px;
+    color: white;
+    opacity: 0.8;
+    animation: twinkle 2s infinite;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn-simple::after {
+    content: '';
+    position: absolute;
+    opacity: 0;
+}
+
+/* 星星闪烁动画 */
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.toggle-btn-simple.night {
+    background: linear-gradient(to right, #2196f3, #1e88e5); /* 黑夜状态：蓝色渐变 */
+}
+
+.toggle-circle {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 太阳图标 - 白天状态 */
+.toggle-circle::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #ffeb3b, #ffc107);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
+}
+
+/* 月亮图标 - 黑夜状态 */
+.toggle-btn-simple.night .toggle-circle::before {
+    background: linear-gradient(to bottom, #e0e0e0, #bdbdbd);
+    box-shadow: none;
+}
+
+.toggle-btn-simple.night .toggle-circle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #2196f3, #1e88e5);
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+.toggle-circle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.toggle-btn-simple.night .toggle-circle {
+    transform: translateX(30px);
+}
+
+/* 按钮样式 */
+.music-btn {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    margin: 10px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.music-btn {
+    background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+}
+
+.toggle-btn:hover, .music-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.toggle-btn:active, .music-btn:active {
+    transform: translateY(-1px);
+}
+
+
+
+
+
+/* 音乐播放器 */
+.music-player {
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+/* 当前播放歌曲信息 */
+.current-song {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 播放控制按钮 */
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.control-btn {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.play-btn {
+    font-size: 1rem;
+    padding: 12px 30px;
+    border-radius: 25px;
+    border: none;
+    background-color: rgba(82, 196, 26, 0.8);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(82, 196, 26, 0.4);
+}
+
+.play-btn:hover {
+    background-color: rgba(82, 196, 26, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(82, 196, 26, 0.6);
+}
+
+/* 进度条容器 */
+.progress-bar-container {
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* 歌曲列表容器 */
+.song-list-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+/* 歌曲项图标 */
+.song-item-icon {
+    cursor: grab;
+    margin-right: 8px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    user-select: none;
+}
+
+.song-item-icon:active {
+    cursor: grabbing;
+}
+
+/* 拖拽状态样式 */
+.song-item.dragging {
+    opacity: 0.5;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 拖拽悬停状态 */
+.song-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 歌曲列表头部 */
+.song-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.song-list-container h3 {
+    text-align: center;
+    margin: 0;
+    font-size: 1.1rem;
+    color: rgba(255, 215, 0, 0.9);
+}
+
+/* 排序控制按钮 */
+.sort-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.sort-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 15px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sort-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* 歌曲列表 */
+.song-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 10px;
+    padding-right: 10px;
+}
+
+/* 自定义滚动条 */
+.song-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.song-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.song-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.song-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* 歌曲项 */
+.song-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.song-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.song-item.active {
+    background-color: rgba(255, 215, 0, 0.3);
+    border-left: 4px solid #FFD700;
+}
+
+/* 歌曲索引 */
+.song-index {
+    width: 25px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-right: 15px;
+    text-align: center;
+}
+
+/* 歌曲名称 */
+.song-name {
+    flex: 1;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
+/* 图片展示区域 */
+.image-section {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 0 1rem;
+    z-index: 200;
+    position: relative;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: inline-block;
+    padding: 0 1rem;
+    letter-spacing: 0.2rem;
+    font-family: 'Microsoft YaHei', cursive;
+}
+
+.section-title::before,
+.section-title::after {
+    content: '🌸';
+    font-size: 1.8rem;
+    margin: 0 0.5rem;
+    vertical-align: middle;
+    animation: float 3s ease-in-out infinite;
+}
+
+.section-title::before {
+    animation-delay: 0s;
+}
+
+.section-title::after {
+    animation-delay: 1.5s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 淡入淡出轮播区域 */
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 500px;
+    margin: 0 auto 2rem;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.slideshow-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    /* 添加旋转效果和过渡 */
+    transform: rotate(-5deg) scale(0.95);
+    transition: 
+        opacity 1s ease-in-out,
+        transform 1s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slideshow-image.active {
+    opacity: 1;
+    /* 激活状态时恢复正常位置和大小 */
+    transform: rotate(0deg) scale(1);
+}
+
+.slideshow-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* 轮播切换按钮 */
+.slideshow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e8f4f8;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* 左切换按钮 */
+.slideshow-btn-prev {
+    left: 20px;
+}
+
+/* 右切换按钮 */
+.slideshow-btn-next {
+    right: 20px;
+}
+
+/* 箭头图标样式 */
+.arrow-icon {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #91c7d7;
+    border-right: none;
+    border-bottom: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+/* 左箭头 */
+.arrow-icon.left {
+    transform: rotate(-45deg);
+    margin-right: 4px;
+}
+
+/* 右箭头 */
+.arrow-icon.right {
+    transform: rotate(135deg);
+    margin-left: 4px;
+}
+
+/* 按钮悬停效果 */
+.slideshow-btn:hover {
+    background-color: #f8fbfe;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 3px 12px rgba(145, 199, 215, 0.3);
+}
+
+.slideshow-btn:hover .arrow-icon {
+    border-color: #64b5d0;
+    transform: rotate(-45deg) scale(1.2);
+}
+
+.slideshow-btn:hover .arrow-icon.right {
+    transform: rotate(135deg) scale(1.2);
+}
+
+/* 按钮点击效果 */
+.slideshow-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+/* 轮播指示器 */
+.slideshow-indicators {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 0.5rem;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.indicator.active {
+    background-color: #ff6b6b;
+    width: 24px;
+    border-radius: 6px;
+}
+
+/* 所有照片标题 */
+.gallery-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+/* 左右滑动图片列表 */
+.image-gallery {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 1rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: #ff6b6b #f0f0f0;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 自定义滚动条 */
+.image-gallery::-webkit-scrollbar {
+    height: 8px;
+}
+
+.image-gallery::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.image-gallery::-webkit-scrollbar-thumb {
+    background: #ff6b6b;
+    border-radius: 4px;
+}
+
+.image-gallery::-webkit-scrollbar-thumb:hover {
+    background: #ff5252;
+}
+
+.gallery-item {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0.7;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+}
+
+.gallery-item.active {
+    opacity: 1;
+    border: 3px solid #ff6b6b;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-caption {
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+/* 页脚 */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 1.1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 淡入动画 */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    /* 标题和副标题 */
+    .title {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+    }
+    
+    /* 切换按钮 */
+    .toggle-btn, .music-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    /* 图片 */
+    #memory-image {
+        max-width: 90%;
+    }
+    
+    /* 音乐播放器 */
+    .music-player {
+        max-width: 95%;
+        margin: 10px auto;
+        padding: 15px;
+    }
+    
+    /* 当前播放信息 */
+    .current-song {
+        margin-bottom: 15px;
+    }
+    
+    /* 播放控制按钮 */
+    .player-controls {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .control-btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .play-btn {
+        font-size: 0.9rem;
+        padding: 10px 25px;
+    }
+    
+    /* 进度条 */
+    .progress-bar-container {
+        margin-bottom: 15px;
+    }
+    
+    /* 歌曲列表 */
+    .song-list-container {
+        margin-top: 15px;
+    }
+    
+    .song-list-container h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+    
+    .song-list {
+        max-height: 250px;
+    }
+    
+    /* 歌曲项 */
+    .song-item {
+        padding: 10px 12px;
+        margin-bottom: 6px;
+    }
+    
+    .song-index {
+        width: 20px;
+        margin-right: 10px;
+        font-size: 0.8rem;
+    }
+    
+    .song-name {
+        font-size: 0.8rem;
+    }
+    
+    /* 烟花和雪花效果在手机端优化 */
+    #firework-container {
+        display: none; /* 在手机端禁用烟花效果以节省性能 */
+    }
+    
+    /* 优化触摸体验 */
+    .toggle-btn, .music-btn, .control-btn, .play-btn, .song-item {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+    
+    /* 图片展示区域移动端适配 */
+    .section-title {
+        font-size: 1.8rem;
+        letter-spacing: 0.1rem;
+    }
+    
+    .section-title::before,
+    .section-title::after {
+        font-size: 1.2rem;
+        margin: 0 0.3rem;
+    }
+    
+    .slideshow-container {
+        height: 300px; /* 移动端减小轮播高度 */
+    }
+    
+    /* 移动端减小轮播按钮大小 */
+    .slideshow-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    
+    /* 移动端调整按钮位置 */
+    .slideshow-btn-prev {
+        left: 10px;
+    }
+    
+    .slideshow-btn-next {
+        right: 10px;
+    }
+    
+    .gallery-title {
+        font-size: 1.3rem;
+    }
+    
+    .gallery-item {
+        width: 120px; /* 移动端减小缩略图宽度 */
+        height: 80px; /* 移动端减小缩略图高度 */
+    }
+    
+    .image-caption {
+        font-size: 1rem;
+    }
+}
