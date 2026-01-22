@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新年祝福贺卡</title>
+    <!-- 引入Vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- 引入Element Plus -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+    <!-- 项目样式 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Vue应用根元素 -->
+    <div id="app">
+        <!-- 开屏动画容器 -->
+        <div id="splash-screen">
+            <!-- 樱花风格进度条 -->
+            <div class="splash-content">
+                <div class="sakura-icon">🌸</div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar">
+                        <div class="progress-sakura">🌸</div>
+                    </div>
+                </div>
+                <div class="loading-text">Loading...</div>
+            </div>
+        </div>
+        <!-- 背景容器 -->
+        <div id="background-container">
+            <!-- 白天背景 -->
+            <div id="day-background" :class="['background', { active: isDayMode }]">
+                <div id="snow-container"></div>
+            </div>
+            <!-- 黄昏背景 -->
+            <div id="twilight-background" class="background"></div>
+            <!-- 黑夜背景 -->
+            <div id="night-background" :class="['background', { active: !isDayMode }]">
+                <canvas id="fireworks-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- 贺卡内容 -->
+        <div class="card-content">
+            <!-- 标题 -->
+            <h1 class="title">新年快乐！</h1>
+            <p class="subtitle">愿新的一年里，万事如意，幸福安康！</p>
+            
+            <!-- 背景切换按钮 - 简约样式 -->
+            <div 
+                @click="toggleBackground"
+                class="toggle-btn-simple"
+                :class="{ 'night': !isDayMode }"
+            >
+                <div class="toggle-circle"></div>
+            </div>
+            
+            <!-- 音乐播放器 -->
+            <div class="music-player">
+                <!-- 当前播放信息 -->
+                <div class="current-song">
+                    <span>{{ currentSong.name || '请选择歌曲' }}</span>
+                </div>
+                
+                <!-- 播放控制按钮 -->
+                <div class="player-controls">
+                    <el-button 
+                        type="primary" 
+                        icon="el-icon-back"
+                        @click="prevSong"
+                        class="control-btn"
+                    >
+                        上一首
+                    </el-button>
+                    <el-button 
+                        type="success" 
+                        size="large"
+                        @click="toggleMusic"
+                        class="play-btn"
+                    >
+                        <span>{{ isMusicPlaying ? '🔊' : '🎵' }}</span> {{ isMusicPlaying ? '暂停' : '播放' }}
+                    </el-button>
+                    <el-button 
+                        type="primary" 
+                        icon="el-icon-right"
+                        @click="nextSong"
+                        class="control-btn"
+                    >
+                        下一首
+                    </el-button>
+                </div>
+                
+                <!-- 进度条 -->
+                <div class="progress-bar-container">
+                    <el-slider 
+                        v-model="currentTime"
+                        :max="duration"
+                        @change="seekAudio"
+                        class="progress-bar"
+                    ></el-slider>
+                    <div class="time-display">
+                        <span>{{ formatTime(currentTime) }}</span>
+                        <span>{{ formatTime(duration) }}</span>
+                    </div>
+                </div>
+                
+                <!-- 歌曲列表容器 -->
+                <div class="song-list-container">
+                    <div class="song-list-header">
+                        <h3>歌曲列表</h3>
+                        <div class="sort-controls">
+                            <button @click="toggleSongOrder" class="sort-btn">
+                                {{ sortOrder === 'asc' ? '名称↑' : '名称↓' }}
+                            </button>
+                            <button @click="resetSongOrder" class="sort-btn">
+                                重置顺序
+                            </button>
+                        </div>
+                    </div>
+                    <div class="song-list">
+                        <div 
+                            v-for="(song, index) in songs" 
+                            :key="index"
+                            @click="selectSong(index)"
+                            class="song-item"
+                            :class="{ active: currentSongIndex === index, dragging: draggedIndex === index }"
+                            draggable="true"
+                            @dragstart="dragStart(index)"
+                            @dragenter="dragEnter(index)"
+                            @dragover.prevent
+                            @dragleave="dragLeave"
+                            @drop="drop(index)"
+                        >
+                            <span class="song-item-icon">☰</span>
+                            <span class="song-index">{{ index + 1 }}</span>
+                            <span class="song-name">{{ song.name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 音乐元素 -->
+            <audio 
+                id="background-music" 
+                @timeupdate="updateProgress"
+                @loadedmetadata="updateDuration"
+                @ended="nextSong"
+            >
+                <source :src="currentSong.src" type="audio/mpeg">
+                您的浏览器不支持音频元素。
+            </audio>
+        </div>
+
+
+
+    <!-- 图片展示区域 -->
+    <div class="image-section">
+        <h2 class="section-title">留影集</h2>
+        
+        <!-- 淡入淡出轮播区域 -->
+        <div class="slideshow-container">
+            <!-- 左切换按钮 -->
+            <button class="slideshow-btn slideshow-btn-prev" @click="prevImage">
+                <span class="arrow-icon left"></span>
+            </button>
+            
+            <!-- 图片轮播 -->
+            <div 
+                v-for="(image, index) in images" 
+                :key="index"
+                class="slideshow-image"
+                :class="{ active: currentImageIndex === index }"
+            >
+                <img :src="image.src" :alt="image.alt" />
+            </div>
+            
+            <!-- 右切换按钮 -->
+            <button class="slideshow-btn slideshow-btn-next" @click="nextImage">
+                <span class="arrow-icon right"></span>
+            </button>
+        </div>
+        
+        <!-- 轮播指示器 -->
+        <div class="slideshow-indicators">
+            <span 
+                v-for="(image, index) in images" 
+                :key="index"
+                class="indicator"
+                :class="{ active: currentImageIndex === index }"
+                @click="goToImage(index)"
+            ></span>
+        </div>
+        
+        <!-- 左右滑动图片列表 -->
+        <h3 class="gallery-title">所有照片</h3>
+        <div class="image-gallery" ref="imageGallery">
+            <div 
+                v-for="(image, index) in images" 
+                :key="index"
+                class="gallery-item"
+                @click="goToImage(index)"
+                :class="{ active: currentImageIndex === index }"
+            >
+                <img :src="image.src" :alt="image.alt" />
+            </div>
+        </div>
+        
+        <p class="image-caption">愿美好时刻永远陪伴着你</p>
+    </div>
+
+    <!-- 页脚祝福语 -->
+    <footer class="footer">
+        <p>㊗️ 新年快乐，美满幸福！</p>
+    </footer>
+    
+    <!-- Vue应用脚本 -->
+    <script src="app.js"></script>
+</div> <!-- 关闭Vue应用根元素 -->
+</body>
+</html>
