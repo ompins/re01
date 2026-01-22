@@ -576,13 +576,20 @@ const app = createApp({
         // 音乐播放控制
         toggleMusic() {
             const audio = document.getElementById('background-music');
+            
+            // 避免快速切换导致的冲突
+            if (audio.isLoading) return;
+            
             this.isMusicPlaying = !this.isMusicPlaying;
             
             if (this.isMusicPlaying) {
                 // 播放音乐
                 audio.play().catch(error => {
-                    console.error('音乐播放失败:', error);
-                    this.isMusicPlaying = false;
+                    // 忽略暂停操作导致的中断错误
+                    if (error.name !== 'AbortError' || !error.message.includes('pause')) {
+                        console.error('音乐播放失败:', error);
+                        this.isMusicPlaying = false;
+                    }
                 });
             } else {
                 // 暂停音乐
@@ -597,11 +604,33 @@ const app = createApp({
             this.currentSong = this.songs[index];
             this.currentTime = 0;
             
+            // 标记正在加载
+            audio.isLoading = true;
+            
+            // 先暂停当前播放
+            audio.pause();
+            
             // 重置并播放新歌曲
             audio.load();
-            if (this.isMusicPlaying) {
-                audio.play();
-            }
+            
+            // 监听音频加载完成事件
+            const playWhenReady = () => {
+                if (this.isMusicPlaying) {
+                    audio.play().catch(error => {
+                        // 忽略加载操作导致的中断错误
+                        if (error.name !== 'AbortError' || !error.message.includes('load')) {
+                            console.error('音乐播放失败:', error);
+                        }
+                    });
+                }
+                // 移除事件监听
+                audio.removeEventListener('canplaythrough', playWhenReady);
+                // 清除加载标记
+                audio.isLoading = false;
+            };
+            
+            // 添加事件监听
+            audio.addEventListener('canplaythrough', playWhenReady);
         },
         
         // 上一首
