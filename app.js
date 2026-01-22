@@ -531,10 +531,13 @@ const app = createApp({
         tryPlayMusic() {
             const audio = document.getElementById('background-music');
             audio.play().catch(error => {
-                console.log('等待用户交互后播放音乐:', error);
-                this.isMusicPlaying = true; // 保持播放状态为true
-                // 添加用户交互监听
-                this.addUserInteractionListener();
+                // 忽略暂停操作导致的中断错误
+                if (error.name !== 'AbortError' || !error.message.includes('pause')) {
+                    console.log('等待用户交互后播放音乐:', error);
+                    this.isMusicPlaying = true; // 保持播放状态为true
+                    // 添加用户交互监听
+                    this.addUserInteractionListener();
+                }
             });
         },
         
@@ -548,7 +551,10 @@ const app = createApp({
                     // 移除所有交互监听
                     this.removeUserInteractionListeners();
                 }).catch(error => {
-                    console.error('用户交互后音乐播放仍失败:', error);
+                    // 忽略暂停操作导致的中断错误
+                    if (error.name !== 'AbortError' || !error.message.includes('pause')) {
+                        console.error('用户交互后音乐播放仍失败:', error);
+                    }
                 });
             };
             
