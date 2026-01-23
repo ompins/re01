@@ -103,10 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 视频切换函数
     function switchVideo(direction) {
-        // 隐藏当前视频
-        currentVideo.style.display = 'none';
-        currentVideo.pause();
-        
         // 确定下一个要播放的视频
         let nextVideo;
         if (direction === 'next') {
@@ -121,10 +117,21 @@ document.addEventListener('DOMContentLoaded', function() {
             else if (currentVideo === video4) nextVideo = video3;
         }
         
+        // 重置当前视频
+        if (currentVideo) {
+            currentVideo.pause();
+            currentVideo.currentTime = 0; // 重置视频时间
+            currentVideo.style.display = 'none';
+        }
+        
         // 显示并播放下一个视频
         nextVideo.style.display = 'block';
+        // 尝试播放视频，优雅处理错误
         nextVideo.play().catch(error => {
-            console.log('播放视频失败:', error);
+            // 忽略AbortError错误，因为这是正常的中断
+            if (error.name !== 'AbortError') {
+                console.log('播放视频失败:', error);
+            }
         });
         currentVideo = nextVideo;
         console.log('视频切换到:', currentVideo.id);
