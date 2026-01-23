@@ -1,5 +1,37 @@
 // 页面加载完成后的动画效果
 document.addEventListener('DOMContentLoaded', function() {
+    // 视频播放相关代码
+    const video1 = document.getElementById('video1');
+    const video2 = document.getElementById('video2');
+    const video3 = document.getElementById('video3');
+    const video4 = document.getElementById('video4');
+    let currentVideo = video1;
+    
+    // 确保所有视频初始状态
+    function initVideos() {
+        // 确保第一个视频显示
+        video1.style.display = 'block';
+        // 确保其他视频初始隐藏
+        video2.style.display = 'none';
+        video3.style.display = 'none';
+        video4.style.display = 'none';
+    }
+    
+    // 初始化视频状态
+    initVideos();
+    
+    // 尝试播放视频的函数
+    function playVideo(video) {
+        if (video) {
+            video.play().catch(error => {
+                // 忽略AbortError错误，因为这是正常的中断
+                if (error.name !== 'AbortError') {
+                    console.log('播放视频失败:', error);
+                }
+            });
+        }
+    }
+    
     // 添加开屏动画点击事件
     const splashScreen = document.querySelector('.splash-screen');
     if (splashScreen) {
@@ -10,29 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 动画结束后执行的逻辑
             setTimeout(function() {
-                // 这里可以添加进入主界面后的额外逻辑
+                // 开屏动画结束后尝试播放视频
+                playVideo(video1);
             }, 1000); // 与淡出动画持续时间一致
         });
+    } else {
+        // 如果没有开屏动画，直接尝试播放视频
+        playVideo(video1);
     }
-    // 视频播放相关代码
-    const video1 = document.getElementById('video1');
-    const video2 = document.getElementById('video2');
-    const video3 = document.getElementById('video3');
-    const video4 = document.getElementById('video4');
-    let currentVideo = video1;
-    
-    // 确保第一个视频显示并尝试播放
-    video1.style.display = 'block';
-    video1.play().catch(error => {
-        console.log('自动播放失败:', error);
-        // 如果自动播放失败，至少确保视频元素显示
-        video1.style.display = 'block';
-    });
-    
-    // 确保其他视频初始隐藏
-    video2.style.display = 'none';
-    video3.style.display = 'none';
-    video4.style.display = 'none';
     
     // 添加用户交互监听，交互后取消静音
     function handleUserInteraction(e) {
@@ -64,9 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
         video1.addEventListener('ended', function() {
             video1.style.display = 'none';
             video2.style.display = 'block';
-            video2.play().catch(error => {
-                console.log('播放第二个视频失败:', error);
-            });
+            playVideo(video2);
             currentVideo = video2;
         });
         
@@ -74,9 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         video2.addEventListener('ended', function() {
             video2.style.display = 'none';
             video3.style.display = 'block';
-            video3.play().catch(error => {
-                console.log('播放第三个视频失败:', error);
-            });
+            playVideo(video3);
             currentVideo = video3;
         });
         
@@ -84,9 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         video3.addEventListener('ended', function() {
             video3.style.display = 'none';
             video4.style.display = 'block';
-            video4.play().catch(error => {
-                console.log('播放第四个视频失败:', error);
-            });
+            playVideo(video4);
             currentVideo = video4;
         });
         
@@ -94,9 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         video4.addEventListener('ended', function() {
             video4.style.display = 'none';
             video1.style.display = 'block';
-            video1.play().catch(error => {
-                console.log('播放第一个视频失败:', error);
-            });
+            playVideo(video1);
             currentVideo = video1;
         });
     }
