@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐藏页面</title>
+    <link rel="stylesheet" href="love.css">
+
+</head>
+<body>
+    <!-- 开屏动画 -->
+    <div class="splash-screen">
+        <div class="splash-content">
+            <h2>🎉 恭喜你！</h2>
+            <h1>发现隐藏页面</h1>
+            <div class="splash-emoji">💖</div>
+            <p>这是一份特别的惊喜</p>
+            <p class="splash-hint">点击屏幕进入主界面</p>
+        </div>
+    </div>
+
+    <!-- 装饰元素 -->
+    <div class="decorations">
+        <div class="decoration" style="top: 10%; left: 10%; animation-delay: 0s;">💕</div>
+        <div class="decoration" style="top: 20%; right: 15%; animation-delay: 1s;">💖</div>
+        <div class="decoration" style="bottom: 15%; left: 20%; animation-delay: 2s;">💗</div>
+        <div class="decoration" style="bottom: 25%; right: 25%; animation-delay: 3s;">💓</div>
+        <div class="decoration" style="top: 50%; left: 5%; animation-delay: 4s;">💘</div>
+        <div class="decoration" style="top: 40%; right: 10%; animation-delay: 5s;">💝</div>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="container">
+        <h1>💖 致我最亲爱的人 💖</h1>
+        
+        <div class="love-content">
+            <p class="love-text">
+                当我第一次见到你，我的心就像被丘比特射中了一样 <span class="heart-emoji">💘</span><br>
+                你的笑容如阳光般温暖，你的声音如天籁般动听 <span class="heart-emoji">💖</span><br>
+                我想告诉你，你就是我生命中最美好的存在 <span class="heart-emoji">💗</span>
+            </p>
+        </div>
+
+        <!-- 视频展示区域 -->
+        <div class="video-container">
+            <!-- 视频切换按钮 -->
+            <button id="prevBtn" class="video-btn prev-btn">&lt;</button>
+            <button id="nextBtn" class="video-btn next-btn">&gt;</button>
+            
+            <!-- 本地视频播放 -->
+            <video id="video1" autoplay muted controls class="video-item">
+                <source src="视频素材/扑通扑通+-+Joysaaaa@南风知欢颜.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            <video id="video2" muted controls class="video-item">
+                <source src="视频素材/【动画短片】我喜欢你的原因.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            <video id="video3" muted controls class="video-item">
+                <source src="视频素材/【4K60FPS】周杰伦《告白气球》超甜神曲！祝大家七夕快乐！.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            <video id="video4" muted controls class="video-item">
+                <source src="视频素材/【怀旧经典】汪苏泷《不分手的恋爱》王炸神曲！三巨头之一.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            
+
+        </div>
+
+        <!-- 情意绵绵 -->
+        <div class="declaration">
+            <h2>情意绵绵</h2>
+            <p>
+                与君初相识，犹如故人归。<br>
+                心悦君兮君可知，相思入骨君可晓？<br>
+                春日迟迟，卉木萋萋。思君如百草，缭乱不可治。<br>
+                夏日炎炎，微风习习。念君如晨露，朝朝暮暮间。<br>
+                秋日凄凄，百卉具腓。忆君如满月，夜夜减清辉。<br>
+                冬日烈烈，飘风发发。想君如暖阳，岁岁暖人心。<br>
+                山有木兮木有枝，心悦君兮君不知。<br>
+                愿得一心人，白首不相离。
+            </p>
+        </div>
+
+        <!-- 按钮 -->
+        <button class="btn">💖 能让我再追你一次吗 💖</button>
+        
+        <!-- 自定义弹窗 -->
+        <div class="custom-modal" id="loveModal">
+            <div class="modal-content">
+                <h3>💖 我的心意 💖</h3>
+                <p>谢谢你的爱！我也爱你！💖<br><br>愿我们的爱情如星辰般永恒，如花朵般美丽绽放！</p>
+                <button class="modal-btn" id="closeModal">💖 我知道啦 💖</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="love.js"></script>
+
+</body>
+</html>

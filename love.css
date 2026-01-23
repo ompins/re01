@@ -1,0 +1,625 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 开屏动画样式 */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a6f, #f8b500);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: pointer;
+    transition: opacity 1s ease-in-out;
+}
+
+.splash-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    text-align: center;
+    color: white;
+    animation: scaleIn 2s ease-in-out;
+}
+
+.splash-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    animation: bounceIn 1s ease-in-out;
+}
+
+.splash-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 2rem;
+    animation: bounceIn 1.5s ease-in-out;
+}
+
+.splash-emoji {
+    font-size: 6rem;
+    margin-bottom: 2rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.splash-content p {
+    font-size: 1.5rem;
+    animation: fadeInUp 2s ease-in-out;
+}
+
+.splash-hint {
+    font-size: 1.2rem;
+    margin-top: 3rem;
+    animation: fadeInUp 3s ease-in-out, pulse 2s ease-in-out infinite 3s;
+    opacity: 0.8;
+}
+
+/* 开屏动画关键帧 */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* 页面容器 */
+.container {
+    max-width: 800px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+    text-align: center;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* 标题样式 */
+h1 {
+    color: #e91e63;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(233, 30, 99, 0.3);
+    animation: pulse 2s infinite;
+}
+
+/* 表白内容样式 */
+.love-content {
+    margin-bottom: 40px;
+    line-height: 1.8;
+}
+
+.love-text {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.heart-emoji {
+    font-size: 2rem;
+    color: #e91e63;
+    margin: 0 10px;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* 视频播放区域 */
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto;
+    text-align: center;
+    padding-top: 66.67%; /* 16:9 宽高比 */
+}
+
+/* 视频切换按钮 */
+.video-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.7);
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.video-btn:hover {
+    background-color: rgba(255,255,255,0.9);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+/* 视频项样式 */
+.video-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    object-fit: contain;
+}
+
+/* 默认显示第一个视频，隐藏其他视频 */
+.video-item:not(:first-child) {
+    display: none;
+}
+
+/* 默认隐藏除第一个视频外的所有视频 */
+.video-item:not(:first-child) {
+    display: none;
+}
+
+
+
+/* 爱的宣言 */
+.declaration {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+.declaration h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.declaration p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* 按钮样式 */
+.btn {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    position: relative;
+    overflow: hidden;
+    animation: heartbeat 2s infinite;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    animation: heartbeat 1.5s infinite;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* 按钮悬停时的闪光效果 */
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+.btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
+}
+
+/* 心跳动画 */
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+    14% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+    28% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+    42% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+}
+
+/* 自定义弹窗样式 */
+.custom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #fff, #f8f0f4);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: slideIn 0.3s ease;
+    border: 3px solid #e91e63;
+}
+
+.modal-content h3 {
+    color: #e91e63;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 2px rgba(233, 30, 99, 0.3);
+}
+
+.modal-content p {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.modal-btn {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.modal-btn:hover {
+    background: #c2185b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(233, 30, 99, 0.4);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 装饰元素 */
+.decorations {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.decoration {
+    position: absolute;
+    font-size: 24px;
+    animation: float 6s ease-in-out infinite;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.3);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.3);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) rotate(360deg);
+        opacity: 0.7;
+    }
+}
+
+/* 樱花飘散样式 */
+.sakura-petal {
+    position: fixed;
+    font-size: 20px;
+    opacity: 0.8;
+    animation: sakuraFloat ease-in-out forwards;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* 樱花向四面八方飘散动画 */
+@keyframes sakuraFloat {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(var(--scale, 1)) translateY(var(--translateY, 100px)) translateX(var(--translateX, 100px)) rotate(var(--rotate, 360deg));
+        opacity: 0;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .love-text {
+        font-size: 1rem;
+    }
+
+    .declaration h2 {
+        font-size: 1.5rem;
+    }
+
+    .video-container {
+        max-width: 100%;
+        padding-top: 66.67%; /* 保持16:9宽高比 */
+    }
+
+    .video-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .modal-content {
+        padding: 30px 20px;
+    }
+
+    .modal-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .modal-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        justify-content: flex-start;
+        padding-top: 30px;
+    }
+
+    .container {
+        padding: 20px 15px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .love-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .heart-emoji {
+        font-size: 1.5rem;
+        margin: 0 5px;
+    }
+
+    .declaration {
+        padding: 20px;
+    }
+
+    .declaration h2 {
+        font-size: 1.3rem;
+    }
+
+    .declaration p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+    .video-container {
+        padding-top: 75%; /* 4:3宽高比，更适合手机竖屏 */
+    }
+
+    .video-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+
+    .modal-content {
+        padding: 20px 15px;
+        width: 95%;
+    }
+
+    .modal-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .modal-content p {
+        font-size: 0.9rem;
+    }
+
+    .modal-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+    /* 装饰元素响应式 */
+    .decoration {
+        font-size: 18px;
+    }
+
+    /* 樱花响应式 */
+    .sakura-petal {
+        font-size: 16px;
+    }
+}
