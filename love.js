@@ -135,13 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 显示并播放下一个视频
         nextVideo.style.display = 'block';
-        // 尝试播放视频，优雅处理错误
-        nextVideo.play().catch(error => {
-            // 忽略AbortError错误，因为这是正常的中断
-            if (error.name !== 'AbortError') {
-                console.log('播放视频失败:', error);
-            }
-        });
+        // 使用playVideo函数播放视频，统一处理错误
+        playVideo(nextVideo);
         currentVideo = nextVideo;
         console.log('视频切换到:', currentVideo.id);
     }
