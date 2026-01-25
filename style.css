@@ -667,6 +667,48 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
+    user-select: none;
+    position: relative;
+    touch-action: none; /* 防止触摸时的默认行为 */
+}
+
+/* 拖拽状态样式 */
+.song-item.dragging {
+    opacity: 0.8;
+    transform: scale(1.02);
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+/* 拖拽插入位置指示器 */
+.song-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #409EFF;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+}
+
+/* 拖拽进入时显示插入指示器 */
+.song-item.drag-over::before {
+    transform: scaleX(1);
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .song-item {
+        padding: 14px 16px;
+        margin: 5px 0;
+    }
+    
+    .song-item.dragging {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
 }
 
 .song-item:hover {
@@ -789,9 +831,64 @@ body {
 }
 
 .slideshow-image img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
+}
+
+/* 移动端响应式优化 */
+@media (max-width: 768px) {
+    /* 调整轮播容器高度 */
+    .slideshow-container {
+        height: 300px;
+    }
+    
+    /* 调整标题大小 */
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-title::before,
+    .section-title::after {
+        font-size: 1.5rem;
+    }
+    
+    /* 调整按钮大小 */
+    .slideshow-btn {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .slideshow-btn-prev {
+        left: 10px;
+    }
+    
+    .slideshow-btn-next {
+        right: 10px;
+    }
+    
+    .arrow-icon {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+/* 小屏手机额外优化 */
+@media (max-width: 480px) {
+    /* 进一步调整轮播容器高度 */
+    .slideshow-container {
+        height: 250px;
+    }
+    
+    /* 进一步调整标题大小 */
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .section-title::before,
+    .section-title::after {
+        font-size: 1.2rem;
+    }
 }
 
 /* 轮播切换按钮 */

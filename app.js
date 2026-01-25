@@ -96,16 +96,18 @@ const app = createApp({
                 ctx: null,
                 animationFrameId: null,
                 // 移除了音效功能
-                // 烟花配置
+                // 设备类型检测
+                isMobile: window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+                // 烟花配置（根据设备类型自动调整）
                 fireworkConfig: {
-                    particleCount: 150, // 增加粒子数量
-                    launchInterval: 300, // 减小发射间隔，增加频率
-                    rocketSpeed: 12, // 增加火箭速度，让烟花飞得更高
-                    gravity: 0.08, // 降低重力加速度，延长粒子上升和下降时间
-                    particleFriction: 0.98, // 增加粒子摩擦系数，让粒子速度减慢得更慢
+                    particleCount: window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 70 : 150, // 减少移动端粒子数量
+                    launchInterval: window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 600 : 300, // 增加移动端发射间隔
+                    rocketSpeed: window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 8 : 12, // 降低移动端火箭速度
+                    gravity: 0.08, // 保持重力不变
+                    particleFriction: 0.98, // 保持摩擦系数不变
                     minHue: 0, // 最小色相
                     maxHue: 360, // 最大色相
-                    particleSize: 2 // 粒子大小
+                    particleSize: window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 1.5 : 2 // 减小移动端粒子大小
                 },
                 autoToggleTimer: null // 自动切换定时器
             };
@@ -821,6 +823,16 @@ const app = createApp({
             );
         },
         
+        // 拖拽相关状态
+        touchStartX: 0,
+        touchStartY: 0,
+        touchStartTime: 0,
+        isLongPress: false,
+        longPressTimer: null,
+        isDragging: false,
+        dragOffsetX: 0,
+        dragOffsetY: 0,
+        
         // 开始拖拽
         dragStart(index) {
             this.draggedIndex = index;
@@ -866,6 +878,101 @@ const app = createApp({
             // 重置拖拽状态
             this.draggedIndex = null;
             this.dragOverIndex = null;
+            this.isDragging = false;
+        },
+        
+        // 触摸开始事件
+        touchStart(event, index) {
+            // 记录触摸起始位置和时间
+            this.touchStartX = event.touches[0].clientX;
+            this.touchStartY = event.touches[0].clientY;
+            this.touchStartTime = Date.now();
+            this.isLongPress = false;
+            
+            // 清除之前的定时器
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+            }
+            
+            // 设置长按定时器（800ms）
+            this.longPressTimer = setTimeout(() => {
+                this.isLongPress = true;
+                this.draggedIndex = index;
+                this.isDragging = true;
+                
+                // 获取触摸元素的位置
+                const target = event.currentTarget;
+                const rect = target.getBoundingClientRect();
+                this.dragOffsetX = this.touchStartX - rect.left;
+                this.dragOffsetY = this.touchStartY - rect.top;
+                
+                // 触发重绘，显示拖拽状态
+                this.$forceUpdate();
+            }, 800);
+        },
+        
+        // 触摸移动事件
+        touchMove(event, index) {
+            // 如果不是长按，则不处理
+            if (!this.isLongPress) {
+                // 检查是否有明显的移动，如果有则取消长按
+                const touchX = event.touches[0].clientX;
+                const touchY = event.touches[0].clientY;
+                const distance = Math.sqrt(
+                    Math.pow(touchX - this.touchStartX, 2) + 
+                    Math.pow(touchY - this.touchStartY, 2)
+                );
+                
+                // 如果移动距离超过10px，则取消长按
+                if (distance > 10) {
+                    clearTimeout(this.longPressTimer);
+                }
+                return;
+            }
+            
+            // 阻止默认滚动行为
+            event.preventDefault();
+            
+            // 计算触摸位置对应的歌曲索引
+            const touchY = event.touches[0].clientY;
+            const songItems = document.querySelectorAll('.song-item');
+            
+            let closestIndex = null;
+            let minDistance = Infinity;
+            
+            songItems.forEach((item, i) => {
+                const rect = item.getBoundingClientRect();
+                const itemCenterY = rect.top + rect.height / 2;
+                const distance = Math.abs(touchY - itemCenterY);
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestIndex = i;
+                }
+            });
+            
+            // 更新拖拽目标索引
+            if (closestIndex !== null && closestIndex !== this.draggedIndex) {
+                this.dragOverIndex = closestIndex;
+                this.$forceUpdate();
+            }
+        },
+        
+        // 触摸结束事件
+        touchEnd(event, index) {
+            // 清除长按定时器
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+            }
+            
+            // 如果是长按拖拽结束，则完成排序
+            if (this.isLongPress && this.draggedIndex !== null && this.dragOverIndex !== null) {
+                this.drop(this.dragOverIndex);
+            }
+            
+            // 重置触摸状态
+            this.isLongPress = false;
+            this.isDragging = false;
         },
         
         // 更新播放进度
@@ -1039,9 +1146,15 @@ const app = createApp({
         explodeFirework(firework) {
             const config = this.fireworkConfig;
             
-            // 随机选择爆炸类型 - 增加心形爆炸的概率
-            // 添加多种爆炸效果，增加视觉丰富度
-            const explosionTypes = ['circle', 'star', 'heart', 'spiral', 'flower'];
+            // 根据设备类型调整爆炸类型
+            let explosionTypes = ['circle', 'star', 'heart', 'spiral', 'flower'];
+            
+            // 在移动端简化爆炸类型，减少复杂计算
+            if (this.isMobile) {
+                explosionTypes = ['circle', 'star', 'heart']; // 只保留简单的爆炸类型
+            }
+            
+            // 随机选择爆炸类型
             const explosionType = explosionTypes[Math.floor(Math.random() * explosionTypes.length)];
             
             // 为爆炸添加颜色变化效果
@@ -1056,7 +1169,7 @@ const app = createApp({
                     case 'circle':
                         // 圆形爆炸（默认）
                         angle = (Math.PI * 2 * i) / config.particleCount;
-                        speed = Math.random() * 5 + 2;
+                        speed = Math.random() * (this.isMobile ? 3 : 5) + (this.isMobile ? 1 : 2);
                         break;
                     case 'star':
                         // 星形爆炸
@@ -1064,10 +1177,9 @@ const app = createApp({
                         const mainAngle = (Math.PI * 2 * i) / config.particleCount;
                         const starAngle = Math.sin(mainAngle * starPoints) * 0.3;
                         angle = mainAngle + starAngle;
-                        speed = Math.random() * 4 + 3;
+                        speed = Math.random() * (this.isMobile ? 3 : 4) + (this.isMobile ? 2 : 3);
                         break;
                 
-                    // 移除了十字形爆炸效果
                     case 'heart':
                         // 心形爆炸 - 修正方向为正立，并优化形状和留存时间
                         const t = (Math.PI * 2 * i) / config.particleCount;
@@ -1076,9 +1188,9 @@ const app = createApp({
                         const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
                         // 转换为角度
                         angle = Math.atan2(heartY, heartX);
-                        // 调整速度计算，让心形形状更清晰（稍微增加基础速度使形状更完整）
+                        // 调整速度计算，让心形形状更清晰
                         const heartDistance = Math.sqrt(heartX * heartX + heartY * heartY);
-                        speed = (heartDistance / 20) * (Math.random() * 1.5 + 2.0) + 0.8; // 增加基础速度，让心形更饱满
+                        speed = (heartDistance / 20) * (Math.random() * (this.isMobile ? 1 : 1.5) + (this.isMobile ? 1.5 : 2.0)) + (this.isMobile ? 0.5 : 0.8);
                         break;
                     
                     case 'spiral':
@@ -1105,7 +1217,7 @@ const app = createApp({
                     default:
                         // 默认使用圆形爆炸
                         angle = (Math.PI * 2 * i) / config.particleCount;
-                        speed = Math.random() * 5 + 2;
+                        speed = Math.random() * (this.isMobile ? 3 : 5) + (this.isMobile ? 1 : 2);
                         break;
                 }
                 
@@ -1117,7 +1229,7 @@ const app = createApp({
                 let particleDecay, particleSize;
                 // 增加衰减速度，让形状持续时间适当缩短
                 particleDecay = Math.random() * 0.012 + 0.003; // 加快衰减速度
-                particleSize = config.particleSize + Math.random() * 3 + 1; // 略微减小粒子尺寸
+                particleSize = config.particleSize + Math.random() * (this.isMobile ? 2 : 3) + (this.isMobile ? 0.5 : 1); // 根据设备类型调整粒子尺寸
                 
                 // 根据不同爆炸类型进行微调
                 switch(explosionType) {
@@ -1160,10 +1272,13 @@ const app = createApp({
         
         // 添加火花效果
         addSparkEffects(x, y, color) {
+            // 根据设备类型调整火花数量
+            const sparkCount = this.isMobile ? 5 : 10;
+            
             // 创建少量快速移动的火花
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < sparkCount; i++) {
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 8 + 5;
+                const speed = Math.random() * (this.isMobile ? 5 : 8) + (this.isMobile ? 3 : 5);
                 
                 const spark = {
                     x: x,
@@ -1173,7 +1288,7 @@ const app = createApp({
                     color: color,
                     alpha: 0.8,
                     decay: Math.random() * 0.05 + 0.02,
-                    size: Math.random() * 2 + 1
+                    size: Math.random() * (this.isMobile ? 1 : 2) + (this.isMobile ? 0.5 : 1)
                 };
                 
                 this.particles.push(spark);
@@ -1193,7 +1308,7 @@ const app = createApp({
                 
                 // 绘制火箭拖尾
                 firework.trail.push({ x: firework.x, y: firework.y });
-                if (firework.trail.length > 10) {
+                if (firework.trail.length > (this.isMobile ? 5 : 10)) {
                     firework.trail.shift();
                 }
                 
@@ -1203,7 +1318,7 @@ const app = createApp({
                     const opacity = j / firework.trail.length;
                     
                     this.ctx.beginPath();
-                    this.ctx.arc(trail.x, trail.y, 2, 0, Math.PI * 2);
+                    this.ctx.arc(trail.x, trail.y, this.isMobile ? 1 : 2, 0, Math.PI * 2);
                     this.ctx.fillStyle = `${firework.color}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`;
                     this.ctx.fill();
                 }
@@ -1217,10 +1332,12 @@ const app = createApp({
                 // 绘制火箭
                 this.ctx.save();
                 this.ctx.beginPath();
-                this.ctx.arc(firework.x, firework.y, 3, 0, Math.PI * 2);
+                this.ctx.arc(firework.x, firework.y, this.isMobile ? 2 : 3, 0, Math.PI * 2);
                 this.ctx.fillStyle = firework.color;
-                this.ctx.shadowColor = firework.color;
-                this.ctx.shadowBlur = 10;
+                if (!this.isMobile) {
+                    this.ctx.shadowColor = firework.color;
+                    this.ctx.shadowBlur = 10;
+                }
                 this.ctx.fill();
                 this.ctx.restore();
                 
@@ -1266,8 +1383,10 @@ const app = createApp({
                 this.ctx.beginPath();
                 this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
                 this.ctx.fillStyle = particle.color;
-                this.ctx.shadowColor = particle.color;
-                this.ctx.shadowBlur = 5;
+                if (!this.isMobile) {
+                    this.ctx.shadowColor = particle.color;
+                    this.ctx.shadowBlur = 5;
+                }
                 this.ctx.fill();
                 this.ctx.restore();
                 

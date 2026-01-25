@@ -125,13 +125,17 @@
                             :key="index"
                             @click="selectSong(index)"
                             class="song-item"
-                            :class="{ active: currentSongIndex === index, dragging: draggedIndex === index }"
+                            :class="{ active: currentSongIndex === index, dragging: draggedIndex === index, 'drag-over': dragOverIndex === index }"
                             draggable="true"
                             @dragstart="dragStart(index)"
                             @dragenter="dragEnter(index)"
                             @dragover.prevent
                             @dragleave="dragLeave"
                             @drop="drop(index)"
+                            @touchstart="touchStart($event, index)"
+                            @touchmove="touchMove($event, index)"
+                            @touchend="touchEnd($event, index)"
+                            @touchcancel="touchEnd($event, index)"
                         >
                             <span class="song-item-icon">☰</span>
                             <span class="song-index">{{ index + 1 }}</span>
